@@ -22,14 +22,4 @@ contract TukToken is
 
         _mint(msg.sender, TOTAL_SUPPLY);
     }
-
-    /**
-     * @dev Allow the company to issue any amount of TUK to any wallet
-     * - Only called by owner
-     * @param _addr The address to mint token
-     * @param _amount The amount to be minted
-     */
-    function mint(address _addr, uint256 _amount) external onlyOwner {
-        _mint(_addr, _amount);
-    }
 }

@@ -25,6 +25,13 @@ contract Vesting is OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
     mapping(address => VestingSchedule[]) public vestingSchedules;
 
+    event AddVestingSchedule(address indexed recipient, uint256 totalAmount, uint256 tgePercent, uint256 lockDuration, uint256 cliffDuration, uint256 vestingDuration);
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     function initialize(address _tuk) public initializer {
         __Ownable_init();
 
@@ -74,6 +81,8 @@ contract Vesting is OwnableUpgradeable, ReentrancyGuardUpgradeable {
                 lastUpdateTime: block.timestamp
             })
         );
+
+        emit AddVestingSchedule(recipient, totalAmount, tgePercent, lockDuration, cliffDuration, vestingDuration);
     }
 
     /**
@@ -84,7 +93,8 @@ contract Vesting is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         require(vestingSchedules[recipient].length > 0, "No vesting schedule found for the recipient");
 
         uint256 totalClaimAmount;
-        for (uint256 i = 0; i < vestingSchedules[recipient].length; i++) {
+        uint256 length = vestingSchedules[recipient].length;
+        for (uint256 i = 0; i < length; i++) {
             VestingSchedule storage vestingSchedule = vestingSchedules[recipient][i];
             
             uint256 vestedAmount = calculateVestedAmount(vestingSchedule);
@@ -107,7 +117,7 @@ contract Vesting is OwnableUpgradeable, ReentrancyGuardUpgradeable {
      * @param vestingSchedule The vesting schedule
      * @return The vested amount
      */
-    function calculateVestedAmount(VestingSchedule storage vestingSchedule) internal view returns (uint256) {
+    function calculateVestedAmount(VestingSchedule memory vestingSchedule) internal view returns (uint256) {
         uint256 initialReleaseAmount = (vestingSchedule.totalAmount * vestingSchedule.tgePercent) / 100;
         uint256 vestingPeriod = vestingSchedule.lockDuration + vestingSchedule.cliffDuration + vestingSchedule.vestingDuration;
         if (block.timestamp < vestingSchedule.initTime + vestingSchedule.lockDuration + vestingSchedule.cliffDuration) {

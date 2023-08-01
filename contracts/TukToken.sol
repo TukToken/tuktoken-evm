@@ -16,6 +16,11 @@ contract TukToken is
 {
     uint256 public constant TOTAL_SUPPLY = 2 * 10 ** 27; // target total supply of TUK is 2 billion
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     function initialize() public initializer {
         __Ownable_init();
         ERC20Upgradeable.__ERC20_init("TukToken", "TUK");

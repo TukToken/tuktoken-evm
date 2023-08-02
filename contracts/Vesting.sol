@@ -63,6 +63,7 @@ contract Vesting is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         require(recipient != address(0), "Invalid recipient address");
         require(totalAmount > 0, "Invalid total amount");
         require(tgePercent <= 100, "Invalid TGE percentage");
+        require(vestingDuration > 0, "Invalid vesting duration");
 
         uint256 releaseAmount = (totalAmount * tgePercent) / 100;
         if (releaseAmount != 0) {
@@ -125,9 +126,9 @@ contract Vesting is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         } else if (block.timestamp >= vestingSchedule.initTime + vestingPeriod) {
             return vestingSchedule.totalAmount;
         } else {
-            uint256 timeSinceLastUpdate = block.timestamp - vestingSchedule.initTime - vestingSchedule.lockDuration;
+            uint256 timeSinceLastUpdate = block.timestamp - vestingSchedule.initTime - vestingSchedule.lockDuration - vestingSchedule.cliffDuration;
             uint256 totalVestingAmount = vestingSchedule.totalAmount - initialReleaseAmount;
-            return (totalVestingAmount * timeSinceLastUpdate) / (vestingPeriod - vestingSchedule.lockDuration) + initialReleaseAmount;
+            return (totalVestingAmount * timeSinceLastUpdate) / vestingSchedule.vestingDuration + initialReleaseAmount;
         }
     }
 }

@@ -109,15 +109,15 @@ describe('Vesting', function () {
     });
 
     it('Test claim after claim period', async () => {
-      // claim 3 month later, vestedAmount = (9000 / 6 month * 3 month) + 1000
+      // claim 3 month later, vestedAmount = (9000 / 4 month * 1 month) + 1000
       await advanceTimeAndBlock(3 * monthToSec);
       await VestingInstance.claim(alice.address);
-      expect(await TukTokenInstance.balanceOf(alice.address)).to.be.within(ethers.utils.parseEther('5500'), ethers.utils.parseEther('5501'));
+      expect(await TukTokenInstance.balanceOf(alice.address)).to.be.within(ethers.utils.parseEther('3250'), ethers.utils.parseEther('3251'));
 
       // claim after another 1 month
       await advanceTimeAndBlock(1 * monthToSec);
       await VestingInstance.claim(alice.address);
-      expect(await TukTokenInstance.balanceOf(alice.address)).to.be.within(ethers.utils.parseEther('7000'), ethers.utils.parseEther('7001'));
+      expect(await TukTokenInstance.balanceOf(alice.address)).to.be.within(ethers.utils.parseEther('5500'), ethers.utils.parseEther('5501'));
 
       // claim after vesting period
       await advanceTimeAndBlock(2 * monthToSec);
@@ -148,10 +148,10 @@ describe('Vesting', function () {
     });
 
     it('Test claim after lock and cliff period', async () => {
-      // claim 25 month later - vested amount = 1000 + (24K / 48 month) * 25 month
+      // claim 25 month later - vested amount = 1000 + (24K / 24 month) * 1 month
       await advanceTimeAndBlock(25 * monthToSec);
       await VestingInstance.claim(alice.address);
-      expect(await TukTokenInstance.balanceOf(alice.address)).to.be.within(ethers.utils.parseEther('13500'), ethers.utils.parseEther('13501'));
+      expect(await TukTokenInstance.balanceOf(alice.address)).to.be.within(ethers.utils.parseEther('2000'), ethers.utils.parseEther('2001'));
 
       // claim after vesting period - vested amount = 24K + 24K
       await advanceTimeAndBlock(23 * monthToSec);

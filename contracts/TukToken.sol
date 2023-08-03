@@ -15,6 +15,7 @@ contract TukToken is
     ReentrancyGuardUpgradeable
 {
     uint256 public constant TOTAL_SUPPLY = 2 * 10 ** 27; // target total supply of TUK is 2 billion
+    address public constant MULTISIG_ADDRESS = 0xbB3007D7DddBCe84F06eF95A086F5950973f4dcC;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -25,6 +26,6 @@ contract TukToken is
         __Ownable_init();
         ERC20Upgradeable.__ERC20_init("TukToken", "TUK");
 
-        _mint(msg.sender, TOTAL_SUPPLY);
+        _mint(MULTISIG_ADDRESS, TOTAL_SUPPLY);
     }
 }

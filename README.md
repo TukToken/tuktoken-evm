@@ -1,5 +1,17 @@
 # TukToken EVM
 
+## TUK token
+The token of eTukTuk.io
+
+## Vesting
+Vesting contract which has lock period, cliff period and vesting period
+```
+Ex; 6 months lock, monthly vest over 6 years
+tgePercent = 0, lockDuration = 6 month(in sec), cliffDuration = 0 month(in sec), vestingDuration = 6 year(in sec)
+Ex; 10% TGE, 2 month cliff, 4 month vesting
+tgePercent = 10, lockDuration = 0 month(in sec), cliffDuration = 2 month(in sec), vestingDuration = 4 month(in sec)
+```
+
 ## Run Tests
 ```
 npx hardhat test
